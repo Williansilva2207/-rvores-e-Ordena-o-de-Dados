@@ -1,0 +1,218 @@
+// Resolução parcial do primeiro exercício de implementação de estruturas de dados lineares em Java (POO)
+// Códigos desenvolvidos na aula do dia 14-02-2025
+
+// Arquivo Aluno.java
+
+public class Aluno implements Comparable <Aluno> {
+    private String matr;
+    private String nome;
+    private double media;
+    private int faltas;
+
+    public Aluno (String matr) {
+        this.matr = matr;
+    }
+
+    public int compareTo (Aluno al) {
+        return this.matr.compareTo (al.matr);
+    }
+
+    public String getMatr() {
+        return matr;
+    }
+
+    public void setMatr(String matr) {
+        this.matr = matr;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public double getMedia() {
+        return media;
+    }
+
+    public void setMedia(double media) {
+        this.media = media;
+    }
+
+    public int getFaltas() {
+        return faltas;
+    }
+
+    public void setFaltas(int faltas) {
+        this.faltas = faltas;
+    }
+
+    public String toString () {
+        return this.matr + " " + this.nome + " " + this.media + " " + this.faltas;
+    }
+}
+
+// Arquivo LSENode.java
+
+ *  A classe LSENode não é public, nevatm prie, nem protected.
+ *  A classe LSENode tem vsiibilidade de pacote, ou seja, só pode ser vista e usada no pacote que
+ *  foi definida. Definir dentro do mesmo pacote que a classe LSEAluno.
+ */
+
+class LSENode {
+    private Aluno info;
+    private LSENode prox;
+
+    LSENode (Aluno al) {
+        this.info = al;
+    }
+
+    Aluno getInfo() {
+        return info;
+    }
+
+    void setInfo(Aluno info) {
+        this.info = info;
+    }
+
+    LSENode getProx() {
+        return prox;
+    }
+
+    void setProx(LSENode prox) {
+        this.prox = prox;
+    }
+}
+
+// Arquivo LSEAluno
+// Classe LSEAluno incompleta.
+
+public class LSEAluno {
+    private LSENode inicio;
+    private LSENode fim;
+    private int qtd;
+
+    public boolean isEmpty () {
+        if (this.qtd == 0) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    private LSENode buscar (Aluno al) {
+        LSENode aux;
+
+        aux = this.inicio;
+        while (aux != null) {
+            if (al.compareTo(aux.getInfo()) == 0) {
+                return aux;
+            }
+            else {
+                aux = aux.getProx();
+            }
+        }
+         return aux;  // retorna null => não achou!
+    }
+
+    public void exibir (String matr) {
+        Aluno proc = new Aluno (matr);
+        LSENode retorno = this.buscar (proc);
+        if (retorno == null) {
+            System.out.println("Aluno não encontrado!");
+        }
+        else {
+            System.out.println("Dados do aluno");
+            System.out.println(retorno.getInfo());
+        }
+    }
+
+    public void inserirInicio (Aluno al) {
+        LSENode retorno = this.buscar (al);
+        LSENode novo;
+        if (retorno == null) { // não existe
+            novo = new LSENode (al);
+            if (this.isEmpty() == true) {
+                this.inicio = novo;
+                this.fim = novo;
+                this.qtd++;
+            }
+            else {
+                novo.setProx(this.inicio);
+                this.inicio = novo;
+                this.qtd++;
+            }
+            System.out.println("Inserção efetuada!");
+        }
+        else {
+            System.out.println("Aluno já existe na lista. Inserção não efetuada!");
+        }
+    }
+}
+
+// Arquivo App.java
+
+public class App {
+    public static void main(String[] args) throws Exception {
+        Scanner input = new Scanner (System.in);
+        LSEAluno turma = new LSEAluno();
+        int op, faltas;
+        String ra, nome;
+        double media;
+        Aluno al;
+        do {
+            exibeOpcoes();
+            op = input.nextInt();
+            switch (op) {
+                case 1: System.out.print("Informe o RA do aluno: ");
+                        ra = input.nextLine();
+                        al = new Aluno (ra);
+                        System.out.print("Informe o nome do aluno: ");
+                        nome = input.nextLine();
+                        al.setNome(nome);
+                        System.out.print("Informe a média do aluno: ");
+                        media = input.nextDouble();
+                        al.setMedia(media);
+                        System.out.println("Informe as faltas do aluno: ");
+                        faltas = input.nextInt();
+                        al.setFaltas(faltas);
+                        turma.inserirInicio(al);
+                        break;
+                case 2: System.out.println("Em desenvolvimento ... ");
+                        break;
+                case 3: System.out.println("Em desenvolvimento ... ");
+                        break;
+                case 4: System.out.print("Informe o RA do aluno: ");
+                        ra = input.nextLine();
+                        turma.exibir(ra);
+                        break;
+                case 5: System.out.println("Em desenvolvimento ... ");
+                        break;
+                case 6: System.out.println("Em desenvolvimento ... ");
+                        break;
+                case 7: System.out.println("Em desenvolvimento ... ");
+                        break;
+                case 0: System.out.println("Bye bye!");
+                default: System.out.println("Opção inválida!");
+            }
+        } while (op != 0);
+    }
+
+    public static void exibeOpcoes () {
+        System.out.println("Opções:");
+        System.out.println("1 - Inserir no início");
+        System.out.println("2 - Inserir no final");
+        System.out.println("3 - Exibir todos os alunos");
+        System.out.println("4 - Exibir dados de um aluno");
+        System.out.println("5 - Alterar os dados de um aluno");
+        System.out.println("6 - Remover o primeiro da lista");
+        System.out.println("7 - Remover o último da lista");
+        System.out.println("0 - Encerrar o programa");
+        System.out.print("Informe a opção desejada: ");
+    }
+}
+
+
