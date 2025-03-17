@@ -1,64 +1,82 @@
 package ABB;
 
-public class ABB<T extends Comparable<T>> {
-    private ABBNode <T> root;
-    public ABB(ABBNode<T> al){
-        this.root = al;
-    }
-    public boolean isEmpty(){
-        return this.root == null;
+public class ABB <T extends Comparable<T>> {
+    private ABBNode<T> root;
+
+    public boolean isEmpty () {
+        if (this.root == null) {
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
-    public void insert(ABBNode<T> node, T valor){
-        if(isEmpty()){
+    public void insert (T valor) {
+        if (this.isEmpty() == true) {
             this.root = new ABBNode<T>(valor);
-        }else{
+        }
+        else {
             inserir(this.root, valor);
         }
     }
 
-    private void inserir(ABBNode<T> node, T valor){
-        //node já é uma cópia do this.root;
-        //node não usa o endereço do this.root;
-        ABBNode<T> aux = search(this.root, valor);
-        if(aux == null){
-            while(true){
-                ABBNode<T> novo = new ABBNode<T>(valor);
-                int retorno;
-                retorno = valor.compareTo(node.getInfo());
-                if(retorno > 0){
-                    if(node.getRight() == null){
-                        node.setRight(novo);
-                        return;
-                    }else{
-                        node = node.getRight();
-                    }
-                }else{
-                    if(node.getLeft() == null){
-                        node.setLeft(novo);
-                        return;
-                    }else{
-                        node = node.getLeft();
-                    }
+    private void inserir(ABBNode<T> node, T valor) { // versão recursiva
+        int retorno;
+        if (node != null) {
+            retorno = valor.compareTo(node.getInfo());
+            if (retorno == 0) {
+                System.out.println("Valor repetido!\n");
+                return;
+            }
+            else if (retorno < 0) {
+                if (node.getLeft() != null) {
+                    inserir(node.getLeft(), valor);
+                } else {
+                    ABBNode<T> novo = new ABBNode<T>(valor);
+                    node.setLeft(novo);
                 }
             }
-        }else{
-            System.out.println("Ja existe fiao!");
-        }
-    }
-    private ABBNode<T> search(ABBNode<T> node, T valor){
-        for(int i = 0; node != null; i++){
-            int retorno = valor.compareTo(node.getInfo());
-            if(retorno == 0){
-                return node;
-            }else if(retorno < 0){
-                node = node.getLeft();
-            }else{
-                node = node.getRight();
+            else {
+                if (node.getRight() != null) {
+                    inserir(node.getRight(), valor);
+                } else {
+                    ABBNode<T> novo = new ABBNode<T>(valor);
+                    node.setRight(novo);
+                }
             }
         }
-        return null;
+    }
+
+    public T find (T value) {
+        if (this.isEmpty() == true) {
+            return null;
+        }
+        else {
+            return findNode (this.root, value);
+        }
+    }
+
+    private T findNode (ABBNode<T> r, T value) {
+        int result = value.compareTo(r.getInfo());
+        if (result == 0) {
+            return r.getInfo();
+        }
+        else if (result < 0) {
+            if (r.getLeft() == null) {
+                return null;
+            }
+            else {
+                return findNode (r.getLeft(),value);
+            }
+        }
+        else {
+            if (r.getRight() == null) {
+                return null;
+             }
+            else {
+                return findNode (r.getRight(),value);
+            }
+        }
     }
 }
-
-
