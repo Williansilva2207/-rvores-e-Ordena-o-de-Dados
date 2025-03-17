@@ -79,4 +79,33 @@ public class ABB <T extends Comparable<T>> {
             }
         }
     }
+    public searchSmall(){
+        if(this.isEmpty==true){
+            return null;
+        }else{
+            return lowestValue(this.root);
+        }
+    }
+    private T lowestValue(ABBNode <T> r){
+        if(r.getLeft != null){
+            lowestValue(r.getLeft);
+        }else{
+            return r.getInfo;
+        }
+    }
+
+    public searchBig(){
+        if(this.isEmpty==true){
+            return null;
+        }else{
+            return highestValue(this.root);
+        }
+    }
+    private T highestValue(ABBNode <T> r){
+        if(r.getRight != null){
+            highestValue(r.getRight);
+        }else{
+            return r.getInfo;
+        }
+    }
 }
