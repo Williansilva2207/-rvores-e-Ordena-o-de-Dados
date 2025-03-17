@@ -7,7 +7,7 @@ public class Queue<T> {
         return beggin == null;
     }
 
-    private void enQueue(T data) {
+    public void enQueue(T data) {
         if (isEmpty()) {
             QueueNode<T> newNode = new QueueNode<>(data);
             beggin = newNode;
@@ -18,7 +18,7 @@ public class Queue<T> {
             end = newNode;
         }
     }
-    private T deQueue() {
+    public T deQueue() {
         QueueNode<T> aux = beggin;
         if (isEmpty()) {
             return null;
@@ -27,8 +27,8 @@ public class Queue<T> {
             beggin = beggin.getNext();
             return aux.getInfo();
         }else{
-            beggin = beggin.getNext();
-            end = end.getNext();
+            beggin = null;
+            end = null;
             return aux.getInfo();
         }
     }
