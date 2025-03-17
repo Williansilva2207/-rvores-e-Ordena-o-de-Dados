@@ -31,3 +31,21 @@
             return r.getInfo;
         }
     }
+
+3.c:
+    public searchSmall(){
+        if(this.isEmpty==true){
+            return null;
+        }else{
+            return lowestValue(this.root);
+        }
+    }
+
+3.d:
+    public searchBig(){
+        if(this.isEmpty==true){
+            return null;
+        }else{
+            return highestValue(this.root);
+        }
+    }
