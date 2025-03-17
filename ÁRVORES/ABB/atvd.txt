@@ -12,7 +12,7 @@
         if(r.getLeft != null){
             lowestValue(r.getLeft);
         }else{
-            return r.getInfo;
+            return r.getInfo();
         }
     }
 
@@ -28,7 +28,7 @@
         if(r.getRight != null){
             highestValue(r.getRight);
         }else{
-            return r.getInfo;
+            return r.getInfo();
         }
     }
 

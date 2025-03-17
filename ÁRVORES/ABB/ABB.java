@@ -1,5 +1,6 @@
 package ABB;
-
+import java.util.Queue;
+import java.util.LinkedList;
 public class ABB <T extends Comparable<T>> {
     private ABBNode<T> root;
 
@@ -90,7 +91,7 @@ public class ABB <T extends Comparable<T>> {
         if(r.getLeft != null){
             lowestValue(r.getLeft);
         }else{
-            return r.getInfo;
+            return r.getInfo();
         }
     }
 
@@ -105,7 +106,28 @@ public class ABB <T extends Comparable<T>> {
         if(r.getRight != null){
             highestValue(r.getRight);
         }else{
-            return r.getInfo;
+            return r.getInfo();
+        }
+    }
+
+    public void passeioPorNivel () {
+        Queue <ABBNode<T>> fila;
+        ABBNode<T> aux;
+        if (this.isEmpty() == false) {
+            fila = new Queue();
+            fila.enQueue (this.root);
+            while (fila.isEmpty () == false) {
+                aux = fila.deQueue();
+                if (aux.getLeft() != null) {
+                    fila.enQueue(aux.getLeft());
+                }
+                if (aux.getRight() != null) {
+                    fila.enQueue(aux.getRight());
+                }
+                System.out.println(aux.getInfo());
+            }
+        }else { 
+            System.out.println("Árvore vazia"); 
         }
     }
 }
