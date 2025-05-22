@@ -1,0 +1,183 @@
+package AVB;
+import java.util.LinkedList;
+import java.util.Queue;
+public class AVB{
+    private AVBNode raiz;
+
+    // Permite acesso externo apenas para leitura da raiz
+    public AVBNode getRaiz() {
+        return raiz;
+    }
+
+    public int buscarValor(AVBNode r, int chave) {
+        int i = 0;
+        while (i < r.getNumChaves() && chave > r.getChaves()[i]){
+            i++;
+        }
+
+        if (i < r.getNumChaves() && chave < r.getChaves()[i]) {
+            return r.getChaves()[i];
+        }
+
+        if (r.isFolha()) {
+            return 0;
+        }
+
+        return buscarValor(r.getFilhos()[i], chave);
+    }
+
+    public void inserirValor(int chave) {
+        if (raiz == null) {
+            raiz = new AVBNode(5); // grau mínimo definido como 2
+            raiz.getChaves()[0] = chave;
+            raiz.setNumChaves(1);
+        } else {
+            if (raiz.getNumChaves() == 2 * raiz.getGrauMin() - 1) {
+                AVBNode novaRaiz = new AVBNode(raiz.getGrauMin());
+                novaRaiz.setFolha(false);
+                novaRaiz.getFilhos()[0] = raiz;
+                reparteFilho(novaRaiz, 0);
+                inserirNaoCheio(novaRaiz, chave);
+                raiz = novaRaiz;
+            } else {
+                inserirNaoCheio(raiz, chave);
+            }
+        }
+    }
+
+    private void inserirNaoCheio(AVBNode x, int chave) {
+        int i = x.getNumChaves() - 1;
+        if (x.isFolha()) {
+            while (i >= 0 && chave < x.getChaves()[i]) {
+                x.getChaves()[i + 1] = x.getChaves()[i];
+                i--;
+            }
+            x.getChaves()[i + 1] = chave;
+            x.setNumChaves(x.getNumChaves() + 1);
+        } else {
+            while (i >= 0 && chave < x.getChaves()[i]) {
+                i--;
+            }
+            i++;
+            if (x.getFilhos()[i].getNumChaves() == 2 * x.getGrauMin() - 1) {
+                reparteFilho(x, i);
+                if (chave > x.getChaves()[i]) {
+                    i++;
+                }
+            }
+            inserirNaoCheio(x.getFilhos()[i], chave);
+        }
+    }
+
+    public void reparteFilho(AVBNode x, int i) {
+        int t = x.getGrauMin();
+        AVBNode y = x.getFilhos()[i];
+        AVBNode z = new AVBNode(t);
+        z.setFolha(y.isFolha());
+
+        for (int j = 0; j < t - 1; j++) {
+            z.getChaves()[j] = y.getChaves()[j + t];
+        }
+
+        if (!y.isFolha()) {
+            for (int j = 0; j < t; j++) {
+                z.getFilhos()[j] = y.getFilhos()[j + t];
+            }
+        }
+
+        y.setNumChaves(t - 1);
+
+        for (int j = x.getNumChaves(); j >= i + 1; j--) {
+            x.getFilhos()[j + 1] = x.getFilhos()[j];
+        }
+        x.getFilhos()[i + 1] = z;
+
+        for (int j = x.getNumChaves() - 1; j >= i; j--) {
+            x.getChaves()[j + 1] = x.getChaves()[j];
+        }
+        x.getChaves()[i] = y.getChaves()[t - 1];
+        x.setNumChaves(x.getNumChaves() + 1);
+    }
+    public void imprimirEmOrdem() {
+        imprimirEmOrdemRecursivo(raiz);
+        System.out.println(); // quebra de linha ao final
+    }
+
+
+    private void imprimirEmOrdemRecursivo(AVBNode  node) {
+        if (node == null) return;
+
+        int numChaves = node.getNumChaves();
+
+        for (int i = 0; i < numChaves; i++) {
+            // Imprime filho i antes da chave i, se não for folha
+            if (!node.isFolha()) {
+                imprimirEmOrdemRecursivo(node.getFilhos()[i]);
+            }
+            // Imprime a chave i
+            System.out.print(node.getChaves()[i] + " ");
+        }
+        // Imprime o último filho (à direita da última chave)
+        if (!node.isFolha()) {
+            imprimirEmOrdemRecursivo(node.getFilhos()[numChaves]);
+        }
+    }
+    public void imprimirArvore() {
+        imprimirArvoreRecursivo(raiz, 0);
+    }
+
+    private void imprimirArvoreRecursivo(AVBNode node, int nivel) {
+        if (node == null) return;
+
+        // Indentação proporcional ao nível (2 espaços por nível, por exemplo)
+        String indent = "  ".repeat(nivel);
+
+        // Imprime as chaves do nó atual
+        System.out.print(indent + "[");
+        for (int i = 0; i < node.getNumChaves(); i++) {
+            System.out.print(node.getChaves()[i]);
+            if (i < node.getNumChaves() - 1) {
+                System.out.print(", ");
+            }
+        }
+        System.out.println("]");
+
+        // Se não for folha, imprime os filhos (nível + 1)
+        if (!node.isFolha()) {
+            for (int i = 0; i <= node.getNumChaves(); i++) {
+                imprimirArvoreRecursivo(node.getFilhos()[i], nivel + 1);
+            }
+        }
+    }
+
+    public void exibirPorNivel() {
+        if (raiz == null) {
+            System.out.println("Árvore vazia");
+            return;
+        }
+
+        Queue<AVBNode> fila = new LinkedList<>();
+        fila.add(raiz);
+
+        while (!fila.isEmpty()) {
+            int tamanhoNivel = fila.size();
+            for (int i = 0; i < tamanhoNivel; i++) {
+                AVBNode no = fila.poll();
+                System.out.print("[");
+                for (int j = 0; j < no.getNumChaves(); j++) {
+                    System.out.print(no.getChaves()[j]);
+                    if (j < no.getNumChaves() - 1) System.out.print(", ");
+                }
+                System.out.print("] ");
+
+                if (!no.isFolha()) {
+                    for (int j = 0; j <= no.getNumChaves(); j++) {
+                        fila.add(no.getFilhos()[j]);
+                    }
+                }
+            }
+            System.out.println();
+        }
+    }
+
+}
