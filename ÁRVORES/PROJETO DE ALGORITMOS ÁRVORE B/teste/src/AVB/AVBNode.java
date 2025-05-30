@@ -1,27 +1,22 @@
 package AVB;
 
-public class AVBNode{
-    private int grauMin;
+public class AVBNode {
+    private int ordem;
     private int numChaves;
     private boolean folha;
     private int[] chaves;
     private AVBNode[] filhos;
 
-
-    public AVBNode(int grauMin) {
-        this.grauMin = grauMin;
+    public AVBNode(int ordem) {
+        this.ordem = ordem;
         this.folha = true;
-        this.chaves =  new int[2*grauMin - 1];
-        filhos = new AVBNode[2*grauMin];
+        this.chaves = new int[ordem - 1];
+        this.filhos = new AVBNode[ordem];
         this.numChaves = 0;
     }
 
-    public int getGrauMin() {
-        return grauMin;
-    }
-
-    public void setGrauMin(int grauMin) {
-        this.grauMin = grauMin;
+    public int getOrdem() {
+        return ordem;
     }
 
     public boolean isFolha() {
@@ -36,16 +31,8 @@ public class AVBNode{
         return chaves;
     }
 
-    public void setChaves(int chaves) {
-        this.chaves = new int[]{chaves};
-    }
-
     public AVBNode[] getFilhos() {
         return filhos;
-    }
-
-    public void setFilhos(AVBNode[] filhos) {
-        this.filhos = filhos;
     }
 
     public int getNumChaves() {
@@ -55,5 +42,4 @@ public class AVBNode{
     public void setNumChaves(int numChaves) {
         this.numChaves = numChaves;
     }
-
 }
